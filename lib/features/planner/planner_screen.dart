@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/utils/constants.dart';
+import '../recipes/recipe_selection_sheet.dart';
 import 'planner_provider.dart';
 import 'models/meal_slot.dart';
 
@@ -89,9 +90,13 @@ class PlannerScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(4),
               child: ElevatedButton(
                 onPressed: () {
-                  //
-                  //
-                  //
+                  showRecipeSelectionSheet(
+                    context: context,
+                    ref: ref,
+                    day: day,
+                    mealType: type,
+                  );
+                  // 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Tocca $day – ${_mealLabel(type)}')),
                   );
