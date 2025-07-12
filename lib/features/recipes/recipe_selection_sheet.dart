@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../planner/models/meal_slot.dart';
 import '../planner/planner_provider.dart';
-import 'mock_recipes.dart';
+// import 'mock_recipes.dart';
+import 'recipes_provider.dart';
 
 void showRecipeSelectionSheet({
   required BuildContext context,
@@ -29,33 +30,41 @@ class RecipeSelectionSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text(
-          'Seleziona una ricetta per ${_mealLabel(type)}',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 12),
-        for (final recipe in mockRecipes)
-          Card(
-            child: ListTile(
-              leading: Image.network(
-                recipe.imageUrl,
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-              ),
-              title: Text(recipe.title),
-              onTap: () {
-                ref
-                    .read(plannerProvider.notifier)
-                    .assignMeal(day: day, type: type, recipe: recipe);
-                context.pop();
-              },
+    final asyncRecipes = ref.watch(recipesProvider);
+
+    return asyncRecipes.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, _) => Center(child: Text('Errore: $err')),
+      data: (recipes) {
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text(
+              'Seleziona una ricetta per ${_mealLabel(type)}',
+              style: Theme.of(context).textTheme.titleMedium,
             ),
-          ),
-      ],
+            const SizedBox(height: 12),
+            for (final recipe in recipes)
+              Card(
+                child: ListTile(
+                  leading: Image.network(
+                    recipe.imageUrl,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(recipe.title),
+                  onTap: () {
+                    ref
+                        .read(plannerProvider.notifier)
+                        .assignMeal(day: day, type: type, recipe: recipe);
+                    context.pop();
+                  },
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
