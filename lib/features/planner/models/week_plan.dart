@@ -1,3 +1,4 @@
+import '../../../core/utils/constants.dart';
 import 'day_plan.dart';
 
 class WeekPlan {
@@ -6,17 +7,8 @@ class WeekPlan {
   WeekPlan({required this.days});
 
   factory WeekPlan.empty() {
-    return WeekPlan(
-      days: {
-        'Lun': DayPlan.empty(),
-        'Mar': DayPlan.empty(),
-        'Mer': DayPlan.empty(),
-        'Gio': DayPlan.empty(),
-        'Ven': DayPlan.empty(),
-        'Sab': DayPlan.empty(),
-        'Dom': DayPlan.empty(),
-      },
-    );
+    final dayMap = {for (final day in Constants.weekdays) day: DayPlan.empty()};
+    return WeekPlan(days: dayMap);
   }
 
   WeekPlan copyWith({Map<String, DayPlan>? days}) {

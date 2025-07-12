@@ -16,7 +16,6 @@ class PlannerNotifier extends StateNotifier<WeekPlan> {
     required MealType type,
     required Recipe recipe,
   }) {
-    // final currentDay = state.days[day]!;
     final currentDay = state.days[day] ?? DayPlan.empty();
     
     final updatedMeals = currentDay.meals.map((slot) {
