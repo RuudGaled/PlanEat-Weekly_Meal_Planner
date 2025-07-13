@@ -12,4 +12,10 @@ class Recipe {
       imageUrl: json['strMealThumb'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'idMeal': id,
+    'strMeal': title,
+    'strMealThumb': imageUrl,
+  };
 }

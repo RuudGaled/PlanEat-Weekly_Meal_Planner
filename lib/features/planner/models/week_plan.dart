@@ -14,4 +14,14 @@ class WeekPlan {
   WeekPlan copyWith({Map<String, DayPlan>? days}) {
     return WeekPlan(days: days ?? this.days);
   }
+
+  Map<String, dynamic> toJson() => {
+    for (var entry in days.entries) entry.key: entry.value.toJson(),
+  };
+
+  factory WeekPlan.fromJson(Map<String, dynamic> json) {
+    return WeekPlan(
+      days: {for (var key in json.keys) key: DayPlan.fromJson(json[key])},
+    );
+  }
 }

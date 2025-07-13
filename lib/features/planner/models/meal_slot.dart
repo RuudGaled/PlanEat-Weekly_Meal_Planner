@@ -9,4 +9,16 @@ class MealSlot {
   MealSlot({required this.type, this.recipe});
 
   MealSlot copyWith({Recipe? recipe}) => MealSlot(type: type, recipe: recipe);
+
+  Map<String, dynamic> toJson() => {
+    'type': type.name,
+    'recipe': recipe?.toJson(),
+  };
+
+  factory MealSlot.fromJson(Map<String, dynamic> json) {
+    return MealSlot(
+      type: MealType.values.firstWhere((e) => e.name == json['type']),
+      recipe: json['recipe'] != null ? Recipe.fromJson(json['recipe']) : null,
+    );
+  }
 }

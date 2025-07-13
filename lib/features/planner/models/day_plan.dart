@@ -14,4 +14,14 @@ class DayPlan {
   DayPlan copyWith({List<MealSlot>? meals}) {
     return DayPlan(meals: meals ?? this.meals);
   }
+
+  Map<String, dynamic> toJson() => {
+    'meals': meals.map((m) => m.toJson()).toList(),
+  };
+
+  factory DayPlan.fromJson(Map<String, dynamic> json) {
+    return DayPlan(
+      meals: (json['meals'] as List).map((m) => MealSlot.fromJson(m)).toList(),
+    );
+  }
 }
