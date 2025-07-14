@@ -19,9 +19,11 @@ class DayPlan {
     'meals': meals.map((m) => m.toJson()).toList(),
   };
 
-  factory DayPlan.fromJson(Map<String, dynamic> json) {
+  factory DayPlan.fromJson(Map<String, dynamic> json, {bool saved = false}) {
     return DayPlan(
-      meals: (json['meals'] as List).map((m) => MealSlot.fromJson(m)).toList(),
+      meals: (json['meals'] as List)
+          .map((m) => MealSlot.fromJson(m, saved: saved))
+          .toList(),
     );
   }
 }

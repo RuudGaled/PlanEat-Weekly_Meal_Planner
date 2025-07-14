@@ -15,10 +15,14 @@ class MealSlot {
     'recipe': recipe?.toJson(),
   };
 
-  factory MealSlot.fromJson(Map<String, dynamic> json) {
+  factory MealSlot.fromJson(Map<String, dynamic> json, {bool saved = false}) {
     return MealSlot(
       type: MealType.values.firstWhere((e) => e.name == json['type']),
-      recipe: json['recipe'] != null ? Recipe.fromJson(json['recipe']) : null,
+      recipe: json['recipe'] != null
+          ? (saved
+                ? Recipe.fromSavedJson(json['recipe'])
+                : Recipe.fromJson(json['recipe']))
+          : null,
     );
   }
 }

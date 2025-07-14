@@ -19,9 +19,12 @@ class WeekPlan {
     for (var entry in days.entries) entry.key: entry.value.toJson(),
   };
 
-  factory WeekPlan.fromJson(Map<String, dynamic> json) {
-    return WeekPlan(
-      days: {for (var key in json.keys) key: DayPlan.fromJson(json[key])},
-    );
-  }
+  factory WeekPlan.fromJson(Map<String, dynamic> json, {bool saved = false}) {
+  return WeekPlan(
+    days: {
+      for (var key in json.keys)
+        key: DayPlan.fromJson(json[key], saved: saved),
+    },
+  );
+}
 }

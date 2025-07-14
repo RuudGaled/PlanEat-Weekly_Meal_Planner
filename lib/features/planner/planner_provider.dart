@@ -7,7 +7,6 @@ import 'models/meal_slot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-
 final plannerProvider = StateNotifierProvider<PlannerNotifier, WeekPlan>((ref) {
   return PlannerNotifier();
 });
@@ -55,7 +54,10 @@ class PlannerNotifier extends StateNotifier<WeekPlan> {
     if (jsonString != null) {
       try {
         final jsonMap = jsonDecode(jsonString);
-        state = WeekPlan.fromJson(jsonMap);
+        state = WeekPlan.fromJson(
+          jsonMap,
+          saved: true,
+        ); // salva gli ingredienti
       } catch (_) {
         state = WeekPlan.empty();
       }
