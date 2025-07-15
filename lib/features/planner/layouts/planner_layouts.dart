@@ -134,25 +134,40 @@ class _DayColumn extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.secondaryContainer,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      slot.recipe?.title ?? 'Aggiungi',
-                      textAlign: TextAlign.center,
-                      style: textTheme.labelSmall,
-                    ),
-                    if (slot.recipe != null)
-                      IconButton(
-                        icon: const Icon(Icons.clear, size: 16),
-                        tooltip: 'Rimuovi',
-                        onPressed: () {
-                          ref
-                              .read(plannerProvider.notifier)
-                              .removeMeal(day: day, type: slot.type);
-                        },
-                      ),
-                  ],
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 4.0,
+                  ),
+                  child: slot.recipe == null
+                      ? Center(
+                          child: Text(
+                            'Aggiungi',
+                            style: textTheme.labelMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                slot.recipe!.title,
+                                style: textTheme.labelMedium,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, size: 16),
+                              tooltip: 'Rimuovi ricetta',
+                              onPressed: () {
+                                ref
+                                    .read(plannerProvider.notifier)
+                                    .removeMeal(day: day, type: slot.type);
+                              },
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ),
@@ -194,22 +209,18 @@ class _PlannerMobilePortrait extends StatelessWidget {
                 ListTile(
                   title: Text(_mealLabel(slot.type)),
                   subtitle: Text(slot.recipe?.title ?? 'Aggiungi'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.fastfood),
-                      if (slot.recipe != null)
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          tooltip: 'Rimuovi',
+                  trailing: slot.recipe != null
+                      ? IconButton(
+                          icon: const Icon(Icons.delete, size: 20),
+                          tooltip: 'Rimuovi ricetta',
                           onPressed: () {
                             ref
                                 .read(plannerProvider.notifier)
                                 .removeMeal(day: day, type: slot.type);
                           },
-                        ),
-                    ],
-                  ),
+                        )
+                      : const Icon(Icons.fastfood),
+
                   onTap: () => showRecipeSelectionSheet(
                     context: context,
                     ref: ref,
@@ -262,22 +273,18 @@ class _PlannerMobileLandscape extends StatelessWidget {
                     ListTile(
                       title: Text(_mealLabel(slot.type)),
                       subtitle: Text(slot.recipe?.title ?? 'Aggiungi'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.fastfood),
-                          if (slot.recipe != null)
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              tooltip: 'Rimuovi',
+                      trailing: slot.recipe != null
+                          ? IconButton(
+                              icon: const Icon(Icons.delete, size: 20),
+                              tooltip: 'Rimuovi ricetta',
                               onPressed: () {
                                 ref
                                     .read(plannerProvider.notifier)
                                     .removeMeal(day: day, type: slot.type);
                               },
-                            ),
-                        ],
-                      ),
+                            )
+                          : const Icon(Icons.fastfood),
+
                       onTap: () => showRecipeSelectionSheet(
                         context: context,
                         ref: ref,
