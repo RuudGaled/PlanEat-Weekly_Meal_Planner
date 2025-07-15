@@ -16,7 +16,13 @@ void showRecipeSelectionSheet({
 }) {
   showModalBottomSheet(
     context: context,
-    builder: (_) => RecipeSelectionSheet(day: day, type: mealType),
+    // builder: (_) => RecipeSelectionSheet(day: day, type: mealType),
+    builder: (_) => FractionallySizedBox(
+      heightFactor: 0.9,
+      child: RecipeSelectionSheet(day: day, type: mealType),
+    ),
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).colorScheme.surface,
   );
 }
 
@@ -33,26 +39,47 @@ class RecipeSelectionSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecipes = ref.watch(recipesProvider);
+    final textTheme = Theme.of(context).textTheme;
 
-    return asyncRecipes.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(child: Text('Errore: $err')),
-      data: (recipes) {
-        // final favoriteRecipes = ref.watch(favoritesProvider);
+    return Column(
+      children: [
+        // Drag handle
+        Container(
+          width: 40,
+          height: 4,
+          margin: const EdgeInsets.only(top: 12, bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.grey[400],
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        Expanded(
+          child: asyncRecipes.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, _) => Center(child: Text('Errore: $err')),
+            data: (recipes) {
+              // final favoriteRecipes = ref.watch(favoritesProvider);
 
-        return ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              'Seleziona una ricetta per ${_mealLabel(type)}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 12),
-            for (final recipe in recipes)
-              RecipeListTile(recipe: recipe, day: day, type: type),
-          ],
-        );
-      },
+              return ListView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 24,
+                ),
+                children: [
+                  Text(
+                    'Seleziona una ricetta per ${_mealLabel(type)}',
+                    style: textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  for (final recipe in recipes)
+                    RecipeListTile(recipe: recipe, day: day, type: type),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -88,19 +115,34 @@ class RecipeListTile extends ConsumerWidget {
       ),
     );
 
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      // elevation: 1,
+      surfaceTintColor: colorScheme.surfaceContainerHighest,
       child: ListTile(
-        leading: Image.network(
-          recipe.imageUrl,
-          width: 50,
-          height: 50,
-          fit: BoxFit.cover,
+        // leading: Image.network(
+        //   recipe.imageUrl,
+        //   width: 50,
+        //   height: 50,
+        //   fit: BoxFit.cover,
+        // ),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            recipe.imageUrl,
+            width: 56,
+            height: 56,
+            fit: BoxFit.cover,
+          ),
         ),
-        title: Text(recipe.title),
+        title: Text(recipe.title, style: textTheme.bodyMedium),
         trailing: IconButton(
           icon: Icon(
             isFav ? Icons.favorite : Icons.favorite_border,
-            color: Colors.red,
+            color: isFav ? Colors.red : colorScheme.onSurfaceVariant,
           ),
           onPressed: () {
             ref.read(favoritesProvider.notifier).toggleFavorite(recipe);

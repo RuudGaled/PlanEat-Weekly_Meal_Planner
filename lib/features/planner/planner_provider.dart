@@ -36,6 +36,20 @@ class PlannerNotifier extends StateNotifier<WeekPlan> {
     _saveToPrefs();
   }
 
+  void removeMeal({required String day, required MealType type}) {
+    final currentDay = state.days[day] ?? DayPlan.empty();
+
+    final updatedMeals = currentDay.meals.map((slot) {
+      return slot.type == type ? slot.copyWith(recipe: null) : slot;
+    }).toList();
+
+    final updatedDayPlan = currentDay.copyWith(meals: updatedMeals);
+    final updatedDays = {...state.days, day: updatedDayPlan};
+
+    state = state.copyWith(days: updatedDays);
+    _saveToPrefs();
+  }
+
   void clearAll() {
     state = WeekPlan.empty();
     _saveToPrefs();

@@ -37,6 +37,8 @@ class _PlannerDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weekPlan = ref.watch(plannerProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Center(
       child: SingleChildScrollView(
@@ -55,7 +57,10 @@ class _PlannerDesktop extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     child: Text(
                       _mealLabel(type),
-                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      // style: const TextStyle(fontStyle: FontStyle.italic),
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
               ],
@@ -63,7 +68,13 @@ class _PlannerDesktop extends StatelessWidget {
             const SizedBox(width: 12),
             // Colonne per ogni giorno
             for (final day in Constants.weekdays)
-              _DayColumn(day: day, weekPlan: weekPlan, ref: ref),
+              _DayColumn(
+                day: day,
+                weekPlan: weekPlan,
+                ref: ref,
+                colorScheme: colorScheme,
+                textTheme: textTheme,
+              ),
           ],
         ),
       ),
@@ -73,32 +84,38 @@ class _PlannerDesktop extends StatelessWidget {
 
 class _DayColumn extends StatelessWidget {
   final String day;
-  // final dynamic weekPlan; // Puoi tipizzarlo meglio se vuoi
   final WeekPlan weekPlan;
   final WidgetRef ref;
+  final ColorScheme colorScheme;
+  final TextTheme textTheme;
 
   const _DayColumn({
     required this.day,
     required this.weekPlan,
     required this.ref,
+    required this.colorScheme,
+    required this.textTheme,
   });
 
   @override
   Widget build(BuildContext context) {
     final dayPlan = weekPlan.days[day]!;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 120, // oppure usa `Flexible`/`IntrinsicWidth` se vuoi dinamico
+    return ConstrainedBox(
+      // margin: const EdgeInsets.symmetric(horizontal: 8),
+      constraints: const BoxConstraints(minWidth: 120, maxWidth: 200),
+      // width: 120, // oppure usa `Flexible`/`IntrinsicWidth` se vuoi dinamico
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            color: Theme.of(context).colorScheme.primaryContainer,
+            color: colorScheme.primaryContainer,
             child: Text(
               day,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: textTheme.labelLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -115,12 +132,27 @@ class _DayColumn extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal.shade50,
+                  backgroundColor: colorScheme.secondaryContainer,
                 ),
-                child: Text(
-                  slot.recipe?.title ?? 'Aggiungi',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      slot.recipe?.title ?? 'Aggiungi',
+                      textAlign: TextAlign.center,
+                      style: textTheme.labelSmall,
+                    ),
+                    if (slot.recipe != null)
+                      IconButton(
+                        icon: const Icon(Icons.clear, size: 16),
+                        tooltip: 'Rimuovi',
+                        onPressed: () {
+                          ref
+                              .read(plannerProvider.notifier)
+                              .removeMeal(day: day, type: slot.type);
+                        },
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -138,6 +170,8 @@ class _PlannerMobilePortrait extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weekPlan = ref.watch(plannerProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -153,17 +187,29 @@ class _PlannerMobilePortrait extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: Text(
-                  day,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                color: colorScheme.primaryContainer,
+                child: Text(day, style: textTheme.titleMedium),
               ),
               for (final slot in dayPlan.meals)
                 ListTile(
                   title: Text(_mealLabel(slot.type)),
                   subtitle: Text(slot.recipe?.title ?? 'Aggiungi'),
-                  trailing: const Icon(Icons.fastfood),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.fastfood),
+                      if (slot.recipe != null)
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          tooltip: 'Rimuovi',
+                          onPressed: () {
+                            ref
+                                .read(plannerProvider.notifier)
+                                .removeMeal(day: day, type: slot.type);
+                          },
+                        ),
+                    ],
+                  ),
                   onTap: () => showRecipeSelectionSheet(
                     context: context,
                     ref: ref,
@@ -187,6 +233,8 @@ class _PlannerMobileLandscape extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weekPlan = ref.watch(plannerProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -202,11 +250,8 @@ class _PlannerMobileLandscape extends StatelessWidget {
               flex: 2,
               child: Container(
                 padding: const EdgeInsets.all(12),
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: Text(
-                  day,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                color: colorScheme.primaryContainer,
+                child: Text(day, style: textTheme.titleMedium),
               ),
             ),
             Expanded(
@@ -217,7 +262,22 @@ class _PlannerMobileLandscape extends StatelessWidget {
                     ListTile(
                       title: Text(_mealLabel(slot.type)),
                       subtitle: Text(slot.recipe?.title ?? 'Aggiungi'),
-                      trailing: const Icon(Icons.fastfood),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.fastfood),
+                          if (slot.recipe != null)
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              tooltip: 'Rimuovi',
+                              onPressed: () {
+                                ref
+                                    .read(plannerProvider.notifier)
+                                    .removeMeal(day: day, type: slot.type);
+                              },
+                            ),
+                        ],
+                      ),
                       onTap: () => showRecipeSelectionSheet(
                         context: context,
                         ref: ref,
