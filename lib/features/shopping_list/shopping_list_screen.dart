@@ -21,12 +21,22 @@ class ShoppingListScreen extends ConsumerWidget {
       body: items.isEmpty
           ? const Center(child: Text('Nessun ingrediente disponibile.'))
           : ListView.separated(
-              padding: const EdgeInsets.all(16),
+              // padding: const EdgeInsets.all(16),
+              // itemCount: items.length,
+              // separatorBuilder: (_, __) => const Divider(),
+              // itemBuilder: (_, index) {
+              //   return ListTile(title: Text(items[index]));
+              // },
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               itemCount: items.length,
-              separatorBuilder: (_, __) => const Divider(),
-              itemBuilder: (_, index) {
-                return ListTile(title: Text(items[index]));
-              },
+              itemBuilder: (_, index) => ListTile(
+                leading: Icon(
+                  Icons.check_box_outline_blank,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                title: Text(items[index]),
+              ),
+              separatorBuilder: (_, __) => Divider(color: Colors.grey.shade300),
             ),
     );
   }
