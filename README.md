@@ -30,13 +30,13 @@ Dal menu laterale (drawer), l’utente può accedere alle seguenti sezioni:
 
 #### 2. Mobile
 <div>
-   <img src="screenshots/mobile-1.png" width="300" />
+   <img src="screenshots/mobile-1.png" width="300"  height="480"/>
    &nbsp;&nbsp;
    <img src="screenshots/mobile-7.png" width="300" />
    &nbsp;&nbsp;
-   <img src="screenshots/mobile-5.png"width="300" />
+   <img src="screenshots/mobile-5.png" width="300"  height="480"/>
    &nbsp;&nbsp;
-   <img src="screenshots/mobile-6.png" width="300"/>
+   <img src="screenshots/mobile-6.png" width="300" height="480" />
 </div>
 
 ## E. Tecnologia e implementazione
