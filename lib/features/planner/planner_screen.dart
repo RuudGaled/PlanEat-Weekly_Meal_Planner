@@ -101,7 +101,7 @@ class _DrawerItem extends StatelessWidget {
         ),
       ),
       selected: selected,
-      selectedTileColor: colorScheme.primary.withOpacity(0.1),
+      selectedTileColor: colorScheme.primary.withAlpha(25),
       onTap: onTap,
     );
   }
