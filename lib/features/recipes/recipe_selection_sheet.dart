@@ -16,7 +16,6 @@ void showRecipeSelectionSheet({
 }) {
   showModalBottomSheet(
     context: context,
-    // builder: (_) => RecipeSelectionSheet(day: day, type: mealType),
     builder: (_) => FractionallySizedBox(
       heightFactor: 0.9,
       child: RecipeSelectionSheet(day: day, type: mealType),
@@ -58,7 +57,6 @@ class RecipeSelectionSheet extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, _) => Center(child: Text('Errore: $err')),
             data: (recipes) {
-              // final favoriteRecipes = ref.watch(favoritesProvider);
 
               return ListView(
                 padding: const EdgeInsets.symmetric(
@@ -120,15 +118,8 @@ class RecipeListTile extends ConsumerWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
-      // elevation: 1,
       surfaceTintColor: colorScheme.surfaceContainerHighest,
       child: ListTile(
-        // leading: Image.network(
-        //   recipe.imageUrl,
-        //   width: 50,
-        //   height: 50,
-        //   fit: BoxFit.cover,
-        // ),
         leading: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
