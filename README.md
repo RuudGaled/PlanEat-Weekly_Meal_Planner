@@ -30,16 +30,16 @@ Dal menu laterale (drawer), l’utente può accedere alle seguenti sezioni:
 
 #### 2. Mobile
 <div>
-   <img src="screenshots/mobile-1.png" width="300"  height="480"/>
+   <img src="screenshots/mobile-1.png" width="200" height="380"/>
    &nbsp;&nbsp;
    <img src="screenshots/mobile-7.png" width="300" />
    &nbsp;&nbsp;
-   <img src="screenshots/mobile-5.png" width="300"  height="480"/>
+   <img src="screenshots/mobile-5.png" width="200" height="380"/>
    &nbsp;&nbsp;
-   <img src="screenshots/mobile-6.png" width="300" height="480" />
+   <img src="screenshots/mobile-6.png" width="200" height="380" />
 </div>
 
-## E. Tecnologia e implementazione
+## Tecnologia e implementazione
 L'app è sviluppata interamente in **Flutter**. Sono stati utilizzati i seguenti pacchetti:
 
 - **flutter_riverpod**: per la gestione dello stato globale. È stato usato in tutte le funzionalità principali (planner, ricette, preferiti).
